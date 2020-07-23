@@ -23,6 +23,9 @@ class Robot {
         bool verbose = false)
       : shape_(shape), robot_name_(robot_name), verbose_(verbose) {}
 
+  double t_start_=std::numeric_limits<double>::max(); //[ROS time] When the robot starts moving (i.e. first successful replan)
+  double t_end_=0.0; //[ROS time] When the robot reaches the goal
+
   /// Set max velocity for planner
   void set_v_max(decimal_t v) { v_max_ = v; }
 
@@ -80,6 +83,7 @@ class Robot {
 
   /// Set traj init time manually
   void set_traj_t(decimal_t t) { traj_t_ = t; }
+  double get_traj_t() { return traj_t_; }
 
   /**
    * @brief planning thread
@@ -120,6 +124,10 @@ class Robot {
     planner_ptr->setTol(0.5);      // Tolerance for goal region
     planner_ptr->setU(U_);         // Set control input
 
+    // start_.print();
+    // std::cout<<"================"<<std::endl;
+    // goal_.print();
+
     if (!planner_ptr->plan(start_, goal_)) return false;
 
     if (verbose_)
@@ -129,10 +137,18 @@ class Robot {
     traj_ = planner_ptr->getTraj();
     traj_t_ = t;
     // printf("traj_t: %.2f\n", traj_t_);
+
+    //successful plan!
+    t_start_=std::min(t_start_, ros::Time::now().toSec());
+    //std::cout<<"traj_.getTotalTime()= "<<traj_.getTotalTime()<<std::endl;
+    //std::cout<<"t_end_= "<<t_end_<<std::endl;
+    //std::cout<<"ros::Time::now().toSec()+traj_.getTotalTime()= "<<ros::Time::now().toSec()+traj_.getTotalTime()<<std::endl;
+    t_end_=std::max(t_end_, ros::Time::now().toSec()+traj_.getTotalTime()); //Need to take into account how long the execution of the traj will take
+
     return true;
   }
 
-  /// Get start
+  /// Get start. Note that this is the start at each replanning step, not the start at the beginning
   Waypoint<Dim> get_start() const { return start_; }
 
   /// Get robot state at time \f$t\f$
@@ -198,8 +214,8 @@ class Robot {
   Waypoint<Dim> start_;
   /// Goal
   Waypoint<Dim> goal_;
-  /// Control flag, use acceleration by default
-  Control::Control control_{Control::ACC};
+  /// Control flag, use jerk by default
+  Control::Control control_{Control::JRK};
   /// Map origin
   Vecf<Dim> origin_;
   /// Map dimension

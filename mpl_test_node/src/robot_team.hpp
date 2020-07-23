@@ -23,6 +23,9 @@ class HomogeneousRobotTeam {
     dim_ = dim;
   }
 
+  std::vector<Vec3f> global_starts_;
+  std::vector<Vec3f> global_goals_;
+
   /// Set planner versbose for individual robot
   void set_verbose(bool verbose) { verbose_ = verbose; }
 
@@ -65,20 +68,20 @@ class HomogeneousRobotTeam {
     return true;
   }
 
-  /// Plan decentralized
+  /// Plan centralized //Should actually be called "Sequential" instead of "Centralized"
   bool update_centralized(decimal_t time) {
     curr_obs_.clear();
     for (const auto& it : robots_)
       curr_obs_.push_back(it->get_nonlinear_obstacle(time).poly(0));
     for (const auto& it : static_obs_) curr_obs_.push_back(it.poly(0));
 
-    static bool planned = false;
+    static bool planned = false; //This function will only be executed once!!
     if (planned) return true;
 
     for (size_t i = 0; i < robots_.size(); i++) {
       vec_E<PolyhedronLinearObstacle<Dim>> linear_obs;
       vec_E<PolyhedronNonlinearObstacle<Dim>> nonlinear_obs;
-      for (size_t j = 0; j < i; j++) {
+      for (size_t j = 0; j < i; j++) { // Get the obstacles of other agents with higher priority
         nonlinear_obs.push_back(robots_[j]->get_nonlinear_obstacle(time, 0));
         // linear_obs.push_back(robots_[j]->get_linear_obstacle(time));
       }
@@ -129,7 +132,7 @@ class HomogeneousRobotTeam {
   /// Robot array
   std::vector<std::shared_ptr<Robot<Dim>>> robots_;
   /// Static Obstacle array
-  vec_E<PolyhedronObstacle2D> static_obs_;
+  vec_E<PolyhedronObstacle3D> static_obs_; //TODO adjust according to dimension (PolyhedronObstacle2D if Dim is 2d)
 };
 
 /*********************** Team 1: 10 robots **************************/
@@ -150,104 +153,104 @@ class HomogeneousRobotTeam {
 /******************  o         |    |         o  ********************/
 /******************            |    |            ********************/
 /********************************************************************/
-class Team1 : public HomogeneousRobotTeam<2> {
- public:
-  Team1(decimal_t ddt) : HomogeneousRobotTeam<2>(ddt) {}
+// class Team1 : public HomogeneousRobotTeam<2> {
+//  public:
+//   Team1(decimal_t ddt) : HomogeneousRobotTeam<2>(ddt) {}
 
-  void init() {
-    traj_time_ = v_max_ / U_.front().lpNorm<Eigen::Infinity>() / dt_;
-    printf("traj time: %f\n", traj_time_);
+//   void init() {
+//     traj_time_ = v_max_ / U_.front().lpNorm<Eigen::Infinity>() / dt_;
+//     printf("traj time: %f\n", traj_time_);
 
-    std::shared_ptr<Robot2D> robot0 =
-        std::make_shared<Robot2D>(rec_, "robot0", verbose_);
-    robot0->set_start(Vec2f(0, -5));
-    robot0->set_goal(Vec2f(10, -5));
+//     std::shared_ptr<Robot2D> robot0 =
+//         std::make_shared<Robot2D>(rec_, "robot0", verbose_);
+//     robot0->set_start(Vec2f(0, -5));
+//     robot0->set_goal(Vec2f(10, -5));
 
-    std::shared_ptr<Robot2D> robot1 =
-        std::make_shared<Robot2D>(rec_, "robot1", verbose_);
-    robot1->set_start(Vec2f(0, -2.5));
-    robot1->set_goal(Vec2f(10, -2.5));
+//     std::shared_ptr<Robot2D> robot1 =
+//         std::make_shared<Robot2D>(rec_, "robot1", verbose_);
+//     robot1->set_start(Vec2f(0, -2.5));
+//     robot1->set_goal(Vec2f(10, -2.5));
 
-    std::shared_ptr<Robot2D> robot2 =
-        std::make_shared<Robot2D>(rec_, "robot2", verbose_);
-    robot2->set_start(Vec2f(0, 0));
-    robot2->set_goal(Vec2f(10, 0));
+//     std::shared_ptr<Robot2D> robot2 =
+//         std::make_shared<Robot2D>(rec_, "robot2", verbose_);
+//     robot2->set_start(Vec2f(0, 0));
+//     robot2->set_goal(Vec2f(10, 0));
 
-    std::shared_ptr<Robot2D> robot3 =
-        std::make_shared<Robot2D>(rec_, "robot3", verbose_);
-    robot3->set_start(Vec2f(0, 2.5));
-    robot3->set_goal(Vec2f(10, 2.5));
+//     std::shared_ptr<Robot2D> robot3 =
+//         std::make_shared<Robot2D>(rec_, "robot3", verbose_);
+//     robot3->set_start(Vec2f(0, 2.5));
+//     robot3->set_goal(Vec2f(10, 2.5));
 
-    std::shared_ptr<Robot2D> robot4 =
-        std::make_shared<Robot2D>(rec_, "robot4", verbose_);
-    robot4->set_start(Vec2f(0, 5));
-    robot4->set_goal(Vec2f(10, 5));
+//     std::shared_ptr<Robot2D> robot4 =
+//         std::make_shared<Robot2D>(rec_, "robot4", verbose_);
+//     robot4->set_start(Vec2f(0, 5));
+//     robot4->set_goal(Vec2f(10, 5));
 
-    std::shared_ptr<Robot2D> robot5 =
-        std::make_shared<Robot2D>(rec_, "robot5", verbose_);
-    robot5->set_start(Vec2f(10, 0));
-    robot5->set_goal(Vec2f(0, 0));
+//     std::shared_ptr<Robot2D> robot5 =
+//         std::make_shared<Robot2D>(rec_, "robot5", verbose_);
+//     robot5->set_start(Vec2f(10, 0));
+//     robot5->set_goal(Vec2f(0, 0));
 
-    std::shared_ptr<Robot2D> robot6 =
-        std::make_shared<Robot2D>(rec_, "robot6", verbose_);
-    robot6->set_start(Vec2f(10, 2.5));
-    robot6->set_goal(Vec2f(0, 2.5));
+//     std::shared_ptr<Robot2D> robot6 =
+//         std::make_shared<Robot2D>(rec_, "robot6", verbose_);
+//     robot6->set_start(Vec2f(10, 2.5));
+//     robot6->set_goal(Vec2f(0, 2.5));
 
-    std::shared_ptr<Robot2D> robot7 =
-        std::make_shared<Robot2D>(rec_, "robot7", verbose_);
-    robot7->set_start(Vec2f(10, 5));
-    robot7->set_goal(Vec2f(0, 5));
+//     std::shared_ptr<Robot2D> robot7 =
+//         std::make_shared<Robot2D>(rec_, "robot7", verbose_);
+//     robot7->set_start(Vec2f(10, 5));
+//     robot7->set_goal(Vec2f(0, 5));
 
-    std::shared_ptr<Robot2D> robot8 =
-        std::make_shared<Robot2D>(rec_, "robot8", verbose_);
-    robot8->set_start(Vec2f(10, -2.5));
-    robot8->set_goal(Vec2f(0, -2.5));
+//     std::shared_ptr<Robot2D> robot8 =
+//         std::make_shared<Robot2D>(rec_, "robot8", verbose_);
+//     robot8->set_start(Vec2f(10, -2.5));
+//     robot8->set_goal(Vec2f(0, -2.5));
 
-    std::shared_ptr<Robot2D> robot9 =
-        std::make_shared<Robot2D>(rec_, "robot9", verbose_);
-    robot9->set_start(Vec2f(10, -5));
-    robot9->set_goal(Vec2f(0, -5));
+//     std::shared_ptr<Robot2D> robot9 =
+//         std::make_shared<Robot2D>(rec_, "robot9", verbose_);
+//     robot9->set_start(Vec2f(10, -5));
+//     robot9->set_goal(Vec2f(0, -5));
 
-    robots_.push_back(robot0);
-    robots_.push_back(robot1);
-    robots_.push_back(robot2);
-    robots_.push_back(robot3);
-    robots_.push_back(robot4);
-    robots_.push_back(robot5);
-    robots_.push_back(robot6);
-    robots_.push_back(robot7);
-    robots_.push_back(robot8);
-    robots_.push_back(robot9);
+//     robots_.push_back(robot0);
+//     robots_.push_back(robot1);
+//     robots_.push_back(robot2);
+//     robots_.push_back(robot3);
+//     robots_.push_back(robot4);
+//     robots_.push_back(robot5);
+//     robots_.push_back(robot6);
+//     robots_.push_back(robot7);
+//     robots_.push_back(robot8);
+//     robots_.push_back(robot9);
 
-    decimal_t ddt = 0;
-    for (auto robot : robots_) {
-      robot->set_v_max(v_max_);
-      robot->set_a_max(a_max_);
-      robot->set_u(U_);
-      robot->set_dt(dt_);
-      robot->set_map(origin_, dim_);
-      robot->plan(ddt);  // need to set a small difference in the starting time
-      ddt += ddt_;
-    }
+//     decimal_t ddt = 0;
+//     for (auto robot : robots_) {
+//       robot->set_v_max(v_max_);
+//       robot->set_a_max(a_max_);
+//       robot->set_u(U_);
+//       robot->set_dt(dt_);
+//       robot->set_map(origin_, dim_);
+//       robot->plan(ddt);  // need to set a small difference in the starting time
+//       ddt += ddt_;
+//     }
 
-    // Build the obstacle course
-    Polyhedron2D rec2;
-    rec2.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
-    rec2.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
-    rec2.add(Hyperplane2D(Vec2f(5, 0.2), -Vec2f::UnitY()));
-    rec2.add(Hyperplane2D(Vec2f(5, 5.5), Vec2f::UnitY()));
-    static_obs_.push_back(PolyhedronObstacle2D(rec2, Vec2f::Zero()));
+//     // Build the obstacle course
+//     Polyhedron2D rec2;
+//     rec2.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
+//     rec2.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
+//     rec2.add(Hyperplane2D(Vec2f(5, 0.2), -Vec2f::UnitY()));
+//     rec2.add(Hyperplane2D(Vec2f(5, 5.5), Vec2f::UnitY()));
+//     static_obs_.push_back(PolyhedronObstacle2D(rec2, Vec2f::Zero()));
 
-    Polyhedron2D rec3;
-    rec3.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
-    rec3.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
-    rec3.add(Hyperplane2D(Vec2f(5, -5.5), -Vec2f::UnitY()));
-    rec3.add(Hyperplane2D(Vec2f(5, -0.2), Vec2f::UnitY()));
-    static_obs_.push_back(PolyhedronObstacle2D(rec3, Vec2f::Zero()));
+//     Polyhedron2D rec3;
+//     rec3.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
+//     rec3.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
+//     rec3.add(Hyperplane2D(Vec2f(5, -5.5), -Vec2f::UnitY()));
+//     rec3.add(Hyperplane2D(Vec2f(5, -0.2), Vec2f::UnitY()));
+//     static_obs_.push_back(PolyhedronObstacle2D(rec3, Vec2f::Zero()));
 
-    printf("Team1 Initialized!\n\n");
-  }
-};
+//     printf("Team1 Initialized!\n\n");
+//   }
+// };
 
 /************************ Team 2: 16 robots **************************/
 /********************************************************************/
@@ -263,94 +266,75 @@ class Team1 : public HomogeneousRobotTeam<2> {
 /******************  o     o     o     o     o  *********************/
 /******************                             *********************/
 /********************************************************************/
-class Team2 : public HomogeneousRobotTeam<2> {
+class Team2 : public HomogeneousRobotTeam<3> {
  public:
-  Team2(decimal_t ddt) : HomogeneousRobotTeam<2>(ddt) {}
+  Team2(decimal_t ddt) : HomogeneousRobotTeam<3>(ddt) {}
+
 
   void init() {
+
+    global_starts_.push_back(Vec3f(4.0, 0.0, 1.0));
+    global_starts_.push_back(Vec3f(4.0, 4.0, 1.0));
+    global_starts_.push_back(Vec3f(0.0, 4.0, 1.0));
+    global_starts_.push_back(Vec3f(-4.0, 4.0, 1.0));
+    global_starts_.push_back(Vec3f(-4.0, 0.0, 1.0));
+    global_starts_.push_back(Vec3f(-4.0, -4.0, 1.0));
+    global_starts_.push_back(Vec3f(0.0, -4.0, 1.0));
+    global_starts_.push_back(Vec3f(4.0, -4.0, 1.0));
+
+    global_goals_.push_back(Vec3f(-4.0, 0.0, 1.0));
+    global_goals_.push_back(Vec3f(-4.0, -4.0, 1.0));
+    global_goals_.push_back(Vec3f(0.0, -4.0, 1.0));
+    global_goals_.push_back(Vec3f(4.0, -4.0, 1.0));
+    global_goals_.push_back(Vec3f(4.0, 0.0, 1.0));
+    global_goals_.push_back(Vec3f(4.0, 4.0, 1.0));
+    global_goals_.push_back(Vec3f(0.0, 4.0, 1.0));
+    global_goals_.push_back(Vec3f(-4.0, 4.0, 1.0));
+
     // traj_time_ = v_max_ / U_.front().lpNorm<Eigen::Infinity>() / dt_ + dt_;
     traj_time_ = 0;
     printf("traj time: %f\n", traj_time_);
 
-    std::shared_ptr<Robot2D> robot0 =
-        std::make_shared<Robot2D>(rec_, "robot0", verbose_);
-    robot0->set_start(Vec2f(0, -5));
-    robot0->set_goal(Vec2f(10, 5));
+ 
+    std::shared_ptr<Robot3D> robot0 =
+        std::make_shared<Robot3D>(rec_, "robot0", verbose_);
+    robot0->set_start(global_starts_[0]);
+    robot0->set_goal(global_goals_[0]);
 
-    std::shared_ptr<Robot2D> robot1 =
-        std::make_shared<Robot2D>(rec_, "robot1", verbose_);
-    robot1->set_start(Vec2f(0, -2.5));
-    robot1->set_goal(Vec2f(10, 2.5));
+    std::shared_ptr<Robot3D> robot1 =
+        std::make_shared<Robot3D>(rec_, "robot1", verbose_);
+    robot1->set_start(global_starts_[1]);
+    robot1->set_goal(global_goals_[1]);
 
-    std::shared_ptr<Robot2D> robot2 =
-        std::make_shared<Robot2D>(rec_, "robot2", verbose_);
-    robot2->set_start(Vec2f(0, 0));
-    robot2->set_goal(Vec2f(10, 0));
+    std::shared_ptr<Robot3D> robot2 =
+        std::make_shared<Robot3D>(rec_, "robot2", verbose_);
+    robot2->set_start(global_starts_[2]);
+    robot2->set_goal(global_goals_[2]);
 
-    std::shared_ptr<Robot2D> robot3 =
-        std::make_shared<Robot2D>(rec_, "robot3", verbose_);
-    robot3->set_start(Vec2f(0, 2.5));
-    robot3->set_goal(Vec2f(10, -2.5));
+    std::shared_ptr<Robot3D> robot3 =
+        std::make_shared<Robot3D>(rec_, "robot3", verbose_);
+    robot3->set_start(global_starts_[3]);
+    robot3->set_goal(global_goals_[3]);
 
-    std::shared_ptr<Robot2D> robot4 =
-        std::make_shared<Robot2D>(rec_, "robot4", verbose_);
-    robot4->set_start(Vec2f(0, 5));
-    robot4->set_goal(Vec2f(10, -5));
+    std::shared_ptr<Robot3D> robot4 =
+        std::make_shared<Robot3D>(rec_, "robot4", verbose_);
+    robot4->set_start(global_starts_[4]);
+    robot4->set_goal(global_goals_[4]);
 
-    std::shared_ptr<Robot2D> robot5 =
-        std::make_shared<Robot2D>(rec_, "robot5", verbose_);
-    robot5->set_start(Vec2f(2.5, 5));
-    robot5->set_goal(Vec2f(7.5, -5));
+    std::shared_ptr<Robot3D> robot5 =
+        std::make_shared<Robot3D>(rec_, "robot5", verbose_);
+    robot5->set_start(global_starts_[5]);
+    robot5->set_goal(global_goals_[5]);
 
-    std::shared_ptr<Robot2D> robot6 =
-        std::make_shared<Robot2D>(rec_, "robot6", verbose_);
-    robot6->set_start(Vec2f(5, 5));
-    robot6->set_goal(Vec2f(5, -5));
+    std::shared_ptr<Robot3D> robot6 =
+        std::make_shared<Robot3D>(rec_, "robot6", verbose_);
+    robot6->set_start(global_starts_[6]);
+    robot6->set_goal(global_goals_[6]);
 
-    std::shared_ptr<Robot2D> robot7 =
-        std::make_shared<Robot2D>(rec_, "robot7", verbose_);
-    robot7->set_start(Vec2f(7.5, 5));
-    robot7->set_goal(Vec2f(2.5, -5));
-
-    std::shared_ptr<Robot2D> robot8 =
-        std::make_shared<Robot2D>(rec_, "robot8", verbose_);
-    robot8->set_start(Vec2f(10, 5));
-    robot8->set_goal(Vec2f(0, -5));
-
-    std::shared_ptr<Robot2D> robot9 =
-        std::make_shared<Robot2D>(rec_, "robot9", verbose_);
-    robot9->set_start(Vec2f(10, 2.5));
-    robot9->set_goal(Vec2f(0, -2.5));
-
-    std::shared_ptr<Robot2D> robot10 =
-        std::make_shared<Robot2D>(rec_, "robot10", verbose_);
-    robot10->set_start(Vec2f(10, 0));
-    robot10->set_goal(Vec2f(0, 0));
-
-    std::shared_ptr<Robot2D> robot11 =
-        std::make_shared<Robot2D>(rec_, "robot11", verbose_);
-    robot11->set_start(Vec2f(10, -2.5));
-    robot11->set_goal(Vec2f(0, 2.5));
-
-    std::shared_ptr<Robot2D> robot12 =
-        std::make_shared<Robot2D>(rec_, "robot12", verbose_);
-    robot12->set_start(Vec2f(10, -5));
-    robot12->set_goal(Vec2f(0, 5));
-
-    std::shared_ptr<Robot2D> robot13 =
-        std::make_shared<Robot2D>(rec_, "robot13", verbose_);
-    robot13->set_start(Vec2f(7.5, -5));
-    robot13->set_goal(Vec2f(2.5, 5));
-
-    std::shared_ptr<Robot2D> robot14 =
-        std::make_shared<Robot2D>(rec_, "robot14", verbose_);
-    robot14->set_start(Vec2f(5, -5));
-    robot14->set_goal(Vec2f(5, 5));
-
-    std::shared_ptr<Robot2D> robot15 =
-        std::make_shared<Robot2D>(rec_, "robot15", verbose_);
-    robot15->set_start(Vec2f(2.5, -5));
-    robot15->set_goal(Vec2f(7.5, 5));
+    std::shared_ptr<Robot3D> robot7 =
+        std::make_shared<Robot3D>(rec_, "robot7", verbose_);
+    robot7->set_start(global_starts_[7]);
+    robot7->set_goal(global_goals_[7]);
 
     robots_.push_back(robot0);
     robots_.push_back(robot1);
@@ -360,14 +344,6 @@ class Team2 : public HomogeneousRobotTeam<2> {
     robots_.push_back(robot5);
     robots_.push_back(robot6);
     robots_.push_back(robot7);
-    robots_.push_back(robot8);
-    robots_.push_back(robot9);
-    robots_.push_back(robot10);
-    robots_.push_back(robot11);
-    robots_.push_back(robot12);
-    robots_.push_back(robot13);
-    robots_.push_back(robot14);
-    robots_.push_back(robot15);
 
     decimal_t ddt = 0;
     for (auto robot : robots_) {
@@ -380,12 +356,12 @@ class Team2 : public HomogeneousRobotTeam<2> {
       ddt += ddt_;
     }
 
-    Polyhedron2D rec1;
+/*    Polyhedron2D rec1;
     rec1.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
     rec1.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
     rec1.add(Hyperplane2D(Vec2f(5, -1), -Vec2f::UnitY()));
     rec1.add(Hyperplane2D(Vec2f(5, 1), Vec2f::UnitY()));
-    static_obs_.push_back(PolyhedronObstacle2D(rec1, Vec2f::Zero()));
+    static_obs_.push_back(PolyhedronObstacle2D(rec1, Vec2f::Zero()));*/
 
     printf("Team2 Initialized!\n\n");
   }

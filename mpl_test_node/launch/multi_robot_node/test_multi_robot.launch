@@ -1,5 +1,9 @@
 <launch>
   <arg name="debug" default="false"/>
+  <arg name="rviz" default="true"/>
+  <arg name="u" default="2.0"/>
+  <arg name="num" default="1"/>
+  <arg name="decentralized" default="true"/>
   <!--<arg name="debug_valgrind" default="false"/>-->
 
   <arg name="prefix" value="" unless="$(arg debug)"/>
@@ -13,13 +17,21 @@
     launch-prefix="$(arg prefix)"
     output="screen">
     <!-- Set dynamic constraints -->
-    <param name="v_max" value="2.0"/>
-    <param name="a_max" value="1.0"/>
-    <param name="u" value="1.0"/>
+    <param name="v_max" value="1.7"/>
+    <param name="a_max" value="6.2"/>
+    <param name="u" value="$(arg u)"/>
+    <param name="num" value="$(arg num)"/><!-- (2*num+1) is the number of samples for each coordinate of the input -->
+    <param name="decentralized" value="$(arg decentralized)"/><!-- (2*num+1) is the number of samples for each coordinate of the input -->
     <param name="dt" value="0.5"/>
     <param name="use_config1" value="false"/>
     <param name="use_config2" value="true"/>
     <param name="file" value="$(find mpl_test_node)/launch/multi_robot_node/sim.bag"/>
   </node>
+
+
+<group if="$(arg rviz)">
+ <include file="$(find mpl_test_node)/launch/multi_robot_node/rviz_multi_robot.launch">
+  </include> 
+</group>
 
 </launch>

@@ -1,0 +1,84 @@
+==============================
+num=(Num of samples-1)/2: 1
+u (m/s3) :2
+Approach: SEQUENTIAL 
+___
+Sum dist all the agents (m): 79.3543
+Safety Margin Ratio: 1.33714
+Total time (s): 21.8266
+Comp time (s): 15.3357
+Exec time (s): 6.49084
+==============================
+num=(Num of samples-1)/2: 1
+u (m/s3) :3
+Approach: SEQUENTIAL 
+___
+Sum dist all the agents (m): 80.4191
+Safety Margin Ratio: 1.76792
+Total time (s): 14.7642
+Comp time (s): 7.7716
+Exec time (s): 6.99256
+==============================
+num=(Num of samples-1)/2: 1
+u (m/s3) :4
+Approach: SEQUENTIAL 
+___
+Sum dist all the agents (m): 83.1868
+Safety Margin Ratio: 1.49071
+Total time (s): 44.0484
+Comp time (s): 34.5572
+Exec time (s): 9.49114
+==============================
+num=(Num of samples-1)/2: 1
+u (m/s3) :5
+Approach: SEQUENTIAL 
+___
+Sum dist all the agents (m): 80.8035
+Safety Margin Ratio: 1.47432
+Total time (s): 11.5954
+Comp time (s): 3.10448
+Exec time (s): 8.49091
+==============================
+num=(Num of samples-1)/2: 1
+u (m/s3) :2
+Approach: DECENTRALIZED 
+___
+Sum dist all the agents (m): 80.1162
+Safety Margin Ratio: 1.41618
+Total time (s): 34.2881
+t_1start (s): 0.021461
+t_laststart (s): 0.232693
+t_1end (s): 33.7107
+==============================
+num=(Num of samples-1)/2: 1
+u (m/s3) :3
+Approach: DECENTRALIZED 
+___
+Sum dist all the agents (m): 79.7519
+Safety Margin Ratio: 1.15048
+Total time (s): 13.3457
+t_1start (s): 0.00292897
+t_laststart (s): 0.057766
+t_1end (s): 12.8101
+==============================
+num=(Num of samples-1)/2: 1
+u (m/s3) :4
+Approach: DECENTRALIZED 
+___
+Sum dist all the agents (m): 87.5991
+Safety Margin Ratio: 1.50185
+Total time (s): 53.8991
+t_1start (s): 0.0297122
+t_laststart (s): 0.599514
+t_1end (s): 53.8235
+==============================
+num=(Num of samples-1)/2: 1
+u (m/s3) :5
+Approach: DECENTRALIZED 
+___
+Sum dist all the agents (m): 88.753
+Safety Margin Ratio: 1.33501
+Total time (s): 9.1691
+t_1start (s): 0.00190306
+t_laststart (s): 0.0505383
+t_1end (s): 9.09637

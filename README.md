@@ -1,3 +1,26 @@
+## Instructions (ACL)
+
+Forked from 
+
+The main changes are these ones:
+
+#### Use of jerk instead of accel as input
+#### 3D instead of 2D
+#### Computation of the statistics (which are written in results.txt)
+
+To run all the tests:
+
+```
+cd scripts
+python run_many_sims.py
+```
+(results will be written to `results.txt`)
+
+To run only one simulation:
+```
+roslaunch mpl_test_node test_multi_robot.launch
+```
+
 # MRSL Motion Primitive Library ROS
 [![wercker status](https://app.wercker.com/status/d282a628f39dac13997c792b2298bde0/s/master "wercker status")](https://app.wercker.com/project/byKey/d282a628f39dac13997c792b2298bde0)
 - - -
