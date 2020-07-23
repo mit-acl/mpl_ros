@@ -4,9 +4,9 @@ Forked from https://github.com/sikang/mpl_ros
 
 The main changes are these ones:
 
-#### Use of jerk instead of accel as input
-#### 3D instead of 2D
-#### Computation of the statistics (which are written in results.txt)
+* Use of jerk instead of accel as input
+* 3D instead of 2D
+* Computation of the statistics (which are written in results.txt)
 
 To run all the tests:
 
