@@ -77,21 +77,3 @@ if __name__ == '__main__':
         for j in range(len(u_all)):
             command="roslaunch mpl_test_node test_multi_robot.launch rviz:=false u:="+str(u_all[j]) +" decentralized:="+str(decentralized[i]); #+" runsim:=false log:=false "; #>> $(rospack find swarm_planner)/scripts/results.txt
             launchCommandAndWaitUntilFinish(command);
-
-    # writeToFile('\n\n\n\n============      RBP PLANNER     ================\n');
-    # writeToFile('==================================================\n\n');
-    # batch_sizes=[1,2,4,8];
-    # for i in range(len(batch_sizes)):
-    #     writeToFile('============batch_size= '+str(batch_sizes[i])+'================\n');
-    #     command="roslaunch swarm_planner plan_rbp_random_forest.launch plan_sequential:=true plan_batch_size:="+str(batch_sizes[i])+" runsim:=false log:=false "; #>> $(rospack find swarm_planner)/scripts/results.txt
-    #     launchCommandAndWaitUntilFinish(command, "RBP");
-
-    # writeToFile('============      SCP PLANNER     ================\n');
-    # writeToFile('==================================================\n\n');
-    # step_sizes=[0.3,0.25,0.2,0.17];
-    # for i in range(len(step_sizes)):
-    #     writeToFile('============step_size= '+str(step_sizes[i])+'================\n');
-    #     for j in range(6):
-    #         writeToFile('______\n');
-    #         command="roslaunch swarm_planner plan_scp_empty_space.launch plan_time_step:="+str(step_sizes[i])+" runsim:=false log:=false "; #>> $(rospack find swarm_planner)/scripts/results.txt
-    #         launchCommandAndWaitUntilFinish(command, "SCP");
